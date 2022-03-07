@@ -1,8 +1,11 @@
 # Interview Scheduler
-
+!["Default screen on a monday!"](https://github.com/Leelamprey/scheduler/blob/master/docs/Monday_base.png?raw=true)
+!["Form in use!"](https://github.com/Leelamprey/scheduler/blob/master/docs/Form.png?raw=true)
+!["About to Delete something!"](https://github.com/Leelamprey/scheduler/blob/master/docs/Delete.png?raw=true)
 ## Setup
 
 Install dependencies with `npm install`.
+
 
 ## Running Webpack Development Server
 
@@ -21,3 +24,4 @@ npm test
 ```sh
 npm run storybook
 ```
+
