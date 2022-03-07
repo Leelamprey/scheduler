@@ -1,27 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import DayList from "./DayList";
 import Appointment from "./Appointment";
-import axios from "axios";
-import { getAppointmentsForDay, getInterview } from "../helpers/selectors";
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from "../helpers/selectors";
+import useApplicationData from "../hooks/useApplicationData";
 import "components/Application.scss";
 
 export default function Application(props) {
-  const [state, setState] = useState({
-    day: "Monday",
-    days: [],
-    appointments: {}
+  const {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview
+  } = useApplicationData();
+
+  const appointments = getAppointmentsForDay(state, state.day);
+  const interviewers = getInterviewersForDay(state, state.day);
+
+  const schedule = appointments.map((appointment) => {
+    const interview = getInterview(state, appointment.interview);
+    return (
+      <Appointment
+        key={appointment.id}
+        {...appointment}
+        interview={interview}
+        interviewers={interviewers}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
+      />
+    );
   });
-
-  const setDay = day => setState({ ...state, day});
-
-  useEffect(() => {
-    const promiseDays = axios.get("/api/days");
-    const promiseAppointments = axios.get("/api/appointments");
-    Promise.all([promiseDays, promiseAppointments])
-      .then(all => {
-        setState(prev => ({ ...prev, days: all[0].data, appointments: all[1].data }))
-      })
-  }, [])
 
   return (
     <main className="layout">
@@ -47,7 +54,7 @@ export default function Application(props) {
       />
       </section>
       <section className="schedule">
-        {getAppointmentsForDay(state, state.day).map(a => <Appointment key={a.id} {...a} />)}
+        {schedule}
         <Appointment key="last" time="5pm" />
       </section>
     </main>
